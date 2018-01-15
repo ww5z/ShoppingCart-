@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 11 يناير 2018 الساعة 09:35
+-- Generation Time: 15 يناير 2018 الساعة 14:30
 -- إصدار الخادم: 10.1.28-MariaDB
 -- PHP Version: 7.1.10
 
@@ -60,11 +60,84 @@ INSERT INTO `product` (`product_id`, `category_id`, `product_name`, `product_pri
 -- --------------------------------------------------------
 
 --
+-- بنية الجدول `tbl_customer`
+--
+
+CREATE TABLE `tbl_customer` (
+  `CustomerID` int(11) NOT NULL,
+  `CustomerName` varchar(255) NOT NULL,
+  `Address` varchar(255) NOT NULL,
+  `City` varchar(255) NOT NULL,
+  `PostalCode` varchar(200) NOT NULL,
+  `Country` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- إرجاع أو استيراد بيانات الجدول `tbl_customer`
+--
+
+INSERT INTO `tbl_customer` (`CustomerID`, `CustomerName`, `Address`, `City`, `PostalCode`, `Country`) VALUES
+(1, 'AbuOmar', 'Address', 'City', '11', 'Country');
+
+-- --------------------------------------------------------
+
+--
+-- بنية الجدول `tbl_order`
+--
+
+CREATE TABLE `tbl_order` (
+  `order_id` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `creation_date` varchar(200) NOT NULL,
+  `order_status` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- إرجاع أو استيراد بيانات الجدول `tbl_order`
+--
+
+INSERT INTO `tbl_order` (`order_id`, `customer_id`, `creation_date`, `order_status`) VALUES
+(1, 1, '2018-01-15', 'pending'),
+(2, 1, '2018-01-15', 'pending'),
+(3, 1, '2018-01-15', 'pending'),
+(4, 1, '2018-01-15', 'pending'),
+(5, 1, '2018-01-15', 'pending'),
+(6, 1, '2018-01-15', 'pending');
+
+-- --------------------------------------------------------
+
+--
+-- بنية الجدول `tbl_order_details`
+--
+
+CREATE TABLE `tbl_order_details` (
+  `id_tbl_order_details` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `product_name` varchar(200) NOT NULL,
+  `product_price` varchar(200) NOT NULL,
+  `product_quantity` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- إرجاع أو استيراد بيانات الجدول `tbl_order_details`
+--
+
+INSERT INTO `tbl_order_details` (`id_tbl_order_details`, `order_id`, `product_name`, `product_price`, `product_quantity`) VALUES
+(12, 5, 'Samsung J2 Pro', '100.00', '1'),
+(13, 5, 'HP Notebook', '299.00', '1'),
+(14, 5, 'Panasonic T44 Lite', '125.00', '2'),
+(15, 6, 'Samsung J2 Pro', '100.00', '2'),
+(16, 6, 'HP Notebook', '299.00', '99');
+
+-- --------------------------------------------------------
+
+--
 -- بنية الجدول `tbl_product`
 --
 
 CREATE TABLE `tbl_product` (
   `id` int(11) NOT NULL,
+  `barcode` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `image` varchar(255) NOT NULL,
   `price` double(10,2) NOT NULL
@@ -74,10 +147,10 @@ CREATE TABLE `tbl_product` (
 -- إرجاع أو استيراد بيانات الجدول `tbl_product`
 --
 
-INSERT INTO `tbl_product` (`id`, `name`, `image`, `price`) VALUES
-(1, 'Samsung J2 Pro', '1.jpg', 100.00),
-(2, 'HP Notebook', '2.jpg', 299.00),
-(3, 'Panasonic T44 Lite', '3.jpg', 125.00);
+INSERT INTO `tbl_product` (`id`, `barcode`, `name`, `image`, `price`) VALUES
+(1, 11, 'Samsung J2 Pro', '1.jpg', 100.00),
+(2, 22, 'HP Notebook', '2.jpg', 299.00),
+(3, 33, 'Panasonic T44 Lite', '3.jpg', 125.00);
 
 --
 -- Indexes for dumped tables
@@ -88,6 +161,24 @@ INSERT INTO `tbl_product` (`id`, `name`, `image`, `price`) VALUES
 --
 ALTER TABLE `product`
   ADD PRIMARY KEY (`product_id`);
+
+--
+-- Indexes for table `tbl_customer`
+--
+ALTER TABLE `tbl_customer`
+  ADD PRIMARY KEY (`CustomerID`);
+
+--
+-- Indexes for table `tbl_order`
+--
+ALTER TABLE `tbl_order`
+  ADD PRIMARY KEY (`order_id`);
+
+--
+-- Indexes for table `tbl_order_details`
+--
+ALTER TABLE `tbl_order_details`
+  ADD PRIMARY KEY (`id_tbl_order_details`);
 
 --
 -- Indexes for table `tbl_product`
@@ -104,6 +195,24 @@ ALTER TABLE `tbl_product`
 --
 ALTER TABLE `product`
   MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT for table `tbl_customer`
+--
+ALTER TABLE `tbl_customer`
+  MODIFY `CustomerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `tbl_order`
+--
+ALTER TABLE `tbl_order`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `tbl_order_details`
+--
+ALTER TABLE `tbl_order_details`
+  MODIFY `id_tbl_order_details` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `tbl_product`
