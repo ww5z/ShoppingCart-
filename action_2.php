@@ -1,8 +1,6 @@
 <?php  
  //action.php  
- session_start();  
- //$connect = mysqli_connect("localhost", "root", "1bn5n52", "shopping_cart");  
-$connect = new PDO('mysql:host=localhost;dbname=shopping_cart;charset=utf8', 'root', '1bn5n52');
+include('includes/database_connection.php');
 
 
 
@@ -38,6 +36,7 @@ foreach($result as $row)
 	$name = $row['name'];
 	$image = $row['image'];
 	$price = $row['price'];
+	$VAT = $row['VAT'];
 }
 
 if ($id == 0){ // التحقق من وجود المنتج
@@ -71,7 +70,8 @@ $product_quantity = 1;
                      $item_array = array(  
                           'product_id'               =>     $id,  
                           'product_name'               =>     $name,  
-                          'product_price'               =>     $price,  
+                          'product_price'               =>     $price, 
+						 	'VAT'               =>     $VAT, 
                           'product_quantity'          =>     $product_quantity  
                      );  
                      $_SESSION["shopping_cart"][] = $item_array;  
@@ -82,7 +82,8 @@ $product_quantity = 1;
                 $item_array = array(  
                      'product_id'               =>     $id,  
                      'product_name'               =>     $name,  
-                     'product_price'               =>     $price,  
+                     'product_price'               =>     $price, 
+					'VAT'               =>     $VAT, 
                      'product_quantity'          =>     $product_quantity  
                 );  
                 $_SESSION["shopping_cart"][] = $item_array;  
@@ -115,33 +116,42 @@ $product_quantity = 1;
                 <tr>  
                      <th width="40%">Product Name</th>  
                      <th width="10%">Quantity</th>  
-                     <th width="20%">Price</th>  
+                     <th width="20%">Price</th> 
+					 <th width="20%">VAT</th> 
                      <th width="15%">Total</th>  
                      <th width="5%">Action</th>  
                 </tr>  
            ';  
       if(!empty($_SESSION["shopping_cart"]))  
       {  
-           $total = 0;  
+           $total = 0;
+		  $VAT   = 0;
            foreach($_SESSION["shopping_cart"] as $keys => $values)  
            {  
                 $order_table .= '  
                      <tr>  
                           <td>'.$values["product_name"].'</td>  
                           <td><input type="text" name="quantity[]" id="quantity'.$values["product_id"].'" value="'.$values["product_quantity"].'" class="form-control quantity" data-product_id="'.$values["product_id"].'" /></td>  
-                          <td align="right">$ '.$values["product_price"].'</td>  
+                          <td align="right">$ '.$values["product_price"].'</td> 
+						  <td align="right">$ '.$values["VAT"].'</td> 
                           <td align="right">$ '.number_format($values["product_quantity"] * $values["product_price"], 2).'</td>  
                           <td><button name="delete" class="btn btn-danger btn-xs delete" id="'.$values["product_id"].'">Remove</button></td>  
                      </tr>  
                 ';  
-                $total = $total + ($values["product_quantity"] * $values["product_price"]);  
+                $total = $total + ($values["product_quantity"] * $values["product_price"]); 
+			   $VAT = $VAT + ($values["product_quantity"] * $values["product_price"]* $values["VAT"]); 
            }  
            $order_table .= '  
                 <tr>  
                      <td colspan="3" align="right">Total</td>  
                      <td align="right">$ '.number_format($total, 2).'</td>  
                      <td></td>  
-                </tr>  
+                </tr>
+				<tr>  
+                     <td colspan="3" align="right">VAT</td>  
+                     <td align="right">$ '.number_format($VAT, 2).'</td>  
+                     <td></td>  
+                </tr> 
                 <tr>  
                      <td colspan="5" align="center">  
                           <form method="post" action="cart.php">  

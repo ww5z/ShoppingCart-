@@ -1,7 +1,7 @@
 <?php  
  //action.php  
- session_start();  
- $connect = mysqli_connect("localhost", "root", "1bn5n52", "shopping_cart");  
+include('includes/database_connection.php');
+
  if(isset($_POST["product_id"]))  
  {  
       $order_table = '';  
