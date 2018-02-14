@@ -34,7 +34,8 @@
 					<?php
 					}
 					?>
-						<li><a href="order.php">Order</a></li>
+						<li><a href="order.php">الطلبات</a></li>
+						<li><a href="multi_tab_shopping_cart.php">نقطة البيع</a></li>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<li class="dropdown">

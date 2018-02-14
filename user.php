@@ -67,7 +67,7 @@ include('header.php');
 						</div>
 						<div class="form-group">
 							<label>Enter User Email</label>
-							<input type="email" name="user_email" id="user_email" class="form-control" required />
+							<input type="text" name="user_email" id="user_email" class="form-control" required />
 						</div>
 						<div class="form-group">
 							<label>Enter User Password</label>

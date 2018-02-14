@@ -2,8 +2,58 @@
  //action.php  
 include('includes/database_connection.php');
 
- if(isset($_POST["product_id"]))  
- {  
+
+
+
+
+
+
+
+
+ if(isset($_POST["product_id"])) {
+	 
+//////////////////////////
+/////////////////////////	
+
+	  if(isset($_POST["barcode"])) {
+	 
+	 $barcode = $_POST["barcode"];
+$query = "
+SELECT * FROM product WHERE barcode = '$barcode'
+";
+$statement = $connect->prepare($query);
+$statement->execute();
+$result = $statement->fetchAll();
+
+$id = '';
+$barcode = '';
+$name = '';
+$image = '';
+$price = '';
+
+
+foreach($result as $row)
+{
+	$id = $row['product_id'];
+	$barcode = $row['barcode'];
+	$name = $row['product_name'];
+	$image = $row['image'];
+	$price = $row['product_base_price'];
+	$VAT = $row['product_tax'];
+}
+
+if ($id == 0){ // التحقق من وجود المنتج
+	die("die");
+}
+	 
+$product_quantity = 1;
+	
+ }
+//////////////////////////
+/////////////////////////	
+	 
+	 
+	 
       $order_table = '';  
       $message = '';  
       if($_POST["action"] == "add")  
@@ -13,19 +63,20 @@ include('includes/database_connection.php');
                 $is_available = 0;  
                 foreach($_SESSION["shopping_cart"] as $keys => $values)  
                 {  
-                     if($_SESSION["shopping_cart"][$keys]['product_id'] == $_POST["product_id"])  
+                     if($_SESSION["shopping_cart"][$keys]['product_id'] == $id)  
                      {  
                           $is_available++;  
-                          $_SESSION["shopping_cart"][$keys]['product_quantity'] = $_SESSION["shopping_cart"][$keys]['product_quantity'] + $_POST["product_quantity"];  
+                          $_SESSION["shopping_cart"][$keys]['product_quantity'] = $_SESSION["shopping_cart"][$keys]['product_quantity'] + $product_quantity ;  
                      }  
                 }  
                 if($is_available < 1)  
                 {  
                      $item_array = array(  
-                          'product_id'               =>     $_POST["product_id"],  
-                          'product_name'               =>     $_POST["product_name"],  
-                          'product_price'               =>     $_POST["product_price"],  
-                          'product_quantity'          =>     $_POST["product_quantity"]  
+                          'product_id'               =>     $id,  
+                          'product_name'               =>     $name,  
+                          'product_price'               =>     $price, 
+						 	'VAT'               =>     $VAT, 
+                          'product_quantity'          =>     $product_quantity  
                      );  
                      $_SESSION["shopping_cart"][] = $item_array;  
                 }  
@@ -33,15 +84,17 @@ include('includes/database_connection.php');
            else  
            {  
                 $item_array = array(  
-                     'product_id'               =>     $_POST["product_id"],  
-                     'product_name'               =>     $_POST["product_name"],  
-                     'product_price'               =>     $_POST["product_price"],  
-                     'product_quantity'          =>     $_POST["product_quantity"]  
+                     'product_id'               =>     $id,  
+                     'product_name'               =>     $name,  
+                     'product_price'               =>     $price, 
+					'VAT'               =>     $VAT, 
+                     'product_quantity'          =>     $product_quantity  
                 );  
                 $_SESSION["shopping_cart"][] = $item_array;  
            }  
-      }  
-      if($_POST["action"] == "remove")  
+      }
+	 
+if($_POST["action"] == "remove")  
       {  
            foreach($_SESSION["shopping_cart"] as $keys => $values)  
            {  
@@ -51,9 +104,8 @@ include('includes/database_connection.php');
                      $message = '<label class="text-success">Product Removed</label>';  
                 }  
            }  
-      }  
-      if($_POST["action"] == "quantity_change")  
-      {  
+      } 
+      if($_POST["action"] == "quantity_change") {  
            foreach($_SESSION["shopping_cart"] as $keys => $values)  
            {  
                 if($_SESSION["shopping_cart"][$keys]['product_id'] == $_POST["product_id"])  
@@ -68,33 +120,42 @@ include('includes/database_connection.php');
                 <tr>  
                      <th width="40%">Product Name</th>  
                      <th width="10%">Quantity</th>  
-                     <th width="20%">Price</th>  
+                     <th width="20%">Price</th> 
+					 <th width="20%">VAT</th> 
                      <th width="15%">Total</th>  
                      <th width="5%">Action</th>  
                 </tr>  
            ';  
       if(!empty($_SESSION["shopping_cart"]))  
       {  
-           $total = 0;  
+           $total = 0;
+		  $VAT   = 0;
            foreach($_SESSION["shopping_cart"] as $keys => $values)  
            {  
                 $order_table .= '  
                      <tr>  
                           <td>'.$values["product_name"].'</td>  
                           <td><input type="text" name="quantity[]" id="quantity'.$values["product_id"].'" value="'.$values["product_quantity"].'" class="form-control quantity" data-product_id="'.$values["product_id"].'" /></td>  
-                          <td align="right">$ '.$values["product_price"].'</td>  
+                          <td align="right">$ '.$values["product_price"].'</td> 
+						  <td align="right">$ '.$values["VAT"].'</td> 
                           <td align="right">$ '.number_format($values["product_quantity"] * $values["product_price"], 2).'</td>  
                           <td><button name="delete" class="btn btn-danger btn-xs delete" id="'.$values["product_id"].'">Remove</button></td>  
                      </tr>  
                 ';  
-                $total = $total + ($values["product_quantity"] * $values["product_price"]);  
+                $VAT = $VAT + ($values["product_quantity"] * $values["product_price"] * $values["VAT"]);  
+				 $total = $total + ($values["product_quantity"] * $values["product_price"]) + $VAT; 
            }  
            $order_table .= '  
                 <tr>  
                      <td colspan="3" align="right">Total</td>  
                      <td align="right">$ '.number_format($total, 2).'</td>  
                      <td></td>  
-                </tr>  
+                </tr>
+				<tr>  
+                     <td colspan="3" align="right">VAT</d>  
+                     <td align="right">$ '.number_format($VAT, 2).'</td>  
+                     <td></td>  
+                </tr> 
                 <tr>  
                      <td colspan="5" align="center">  
                           <form method="post" action="cart.php">  

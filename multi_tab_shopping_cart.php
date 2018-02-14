@@ -119,7 +119,7 @@ include('includes/database_connection.php');
 		   
            if(product_quantity > 0) {
                 $.ajax({  
-                     url:"action_2.php",  
+                     url:"action.php",  
                      method:"POST",  
                      dataType:"json",  
                      data:{  

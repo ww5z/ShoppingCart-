@@ -4,7 +4,7 @@
 
 include('../../includes/database_connection.php');
 
-include('function.php');
+include('../function/function.php');
 
 if(isset($_POST['btn_action']))
 {

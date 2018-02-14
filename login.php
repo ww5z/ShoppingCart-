@@ -1,7 +1,7 @@
 <?php
 //login.php
 
-include('database_connection.php');
+include('includes/database_connection.php');
 
 if(isset($_SESSION['type']))
 {
