@@ -18,11 +18,9 @@ include('includes/database_connection.php');
                 <?php  
                 if(isset($_POST["place_order"]))  
                 {  
-					 $user_id = $_SESSION['user_id']; 
-					$total = $_POST["total"]; 
                      $insert_order = "  
-                     INSERT INTO inventory_order(user_id, customer_id, inventory_order_created_date, inventory_order_total, inventory_order_status)  
-                     VALUES('$user_id', '2', '".date('Y-m-d')."', '$total', 'active')  
+                     INSERT INTO tbl_order(customer_id, creation_date, order_status)  
+                     VALUES('1', '".date('Y-m-d')."', 'pending')  
                      ";  
                      $order_id = "";  
 					
