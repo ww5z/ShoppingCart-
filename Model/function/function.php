@@ -19,6 +19,27 @@ function fill_category_list($connect)
 	return $output;
 }
 
+////////////////////my add
+function fill_main_list($connect)
+{
+	$query = "
+	SELECT * FROM product 
+	WHERE position = '1' 
+	ORDER BY product_name ASC
+	";
+	$statement = $connect->prepare($query);
+	$statement->execute();
+	$result = $statement->fetchAll();
+	$output = '';
+	foreach($result as $row)
+	{
+		$output .= '<option value="'.$row["product_id"].'">'.$row["product_name"].'</option>';
+	}
+	return $output;
+}
+
+
+
 function fill_brand_list($connect, $category_id)
 {
 	$query = "SELECT * FROM brand 

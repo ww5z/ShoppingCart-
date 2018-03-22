@@ -16,13 +16,14 @@ include('includes/database_connection.php');
            <br />  
            <div class="container" style="width:800px;">  
                 <?php  
+			   
                 if(isset($_POST["place_order"]))  
                 {  
-					 $user_id = $_SESSION['user_id']; 
+					 $user_id = $_SESSION["user_id"]; 
 					$total = $_POST["total"]; 
                      $insert_order = "  
                      INSERT INTO inventory_order(user_id, customer_id, inventory_order_created_date, inventory_order_total, inventory_order_status)  
-                     VALUES('$user_id', '2', '".date('Y-m-d')."', '$total', 'active')  
+                     VALUES('$user_id', '1', '".date('Y-m-d')."', '$total', 'active')  
                      ";  
                      $order_id = "";  
 					
@@ -35,15 +36,15 @@ include('includes/database_connection.php');
                      foreach($_SESSION["shopping_cart"] as $keys => $values)  
                      {  
                           $order_details .= "  
-                          INSERT INTO tbl_order_details(order_id, product_name, product_price, product_quantity)  
-                          VALUES('".$order_id."', '".$values["product_name"]."', '".$values["product_price"]."', '".$values["product_quantity"]."');  
+                          INSERT INTO inventory_order_product(inventory_order_id, product_id, price, quantity, tax)  
+                          VALUES('".$order_id."', '".$values["product_id"]."', '".$values["product_price"]."', '".$values["product_quantity"]."', '".$values["VAT"]."');  
                           ";  
                      }  
 					$result = $connect->exec($order_details);
                      if($result)  
                      {  
                           unset($_SESSION["shopping_cart"]);  
-                          echo '<script>alert("You have successfully place an order...Thank you")</script>';  
+                          //echo '<script>alert("You have successfully place an order...Thank you")</script>';  
                           echo '<script>window.location.href="cart.php"</script>';  
                      }  
                 }  
@@ -53,12 +54,12 @@ include('includes/database_connection.php');
                      $order_details = '';  
                      $total = 0;  
                      $query = '  
-                     SELECT * FROM tbl_order  
-                     INNER JOIN tbl_order_details  
-                     ON tbl_order_details.order_id = tbl_order.order_id  
+                     SELECT * FROM inventory_order  
+                     INNER JOIN inventory_order_product  
+                     ON inventory_order_product.inventory_order_id = inventory_order.inventory_order_id  
                      INNER JOIN tbl_customer  
-                     ON tbl_customer.CustomerID = tbl_order.customer_id  
-                     WHERE tbl_order.order_id = "'.$_SESSION["order_id"].'"  
+                     ON tbl_customer.CustomerID = inventory_order.customer_id  
+                     WHERE inventory_order.inventory_order_id = "'.$_SESSION["order_id"].'"  
                      ';  
                      $statement = $connect->prepare($query);
 					$statement->execute();
@@ -73,13 +74,13 @@ include('includes/database_connection.php');
                           ';  
                           $order_details .= "  
                                <tr>  
-                                    <td>".$row["product_name"]."</td>  
-                                    <td>".$row["product_quantity"]."</td>  
-                                    <td>".$row["product_price"]."</td>  
-                                    <td>".number_format($row["product_quantity"] * $row["product_price"], 2)."</td>  
+                                    <td>".$row["product_id"]."</td>  
+                                    <td>".$row["quantity"]."</td>  
+                                    <td>".$row["price"]."</td>  
+                                    <td>".number_format($row["quantity"] * $row["price"], 2)."</td>  
                                </tr>  
                           ";  
-                          $total = $total + ($row["product_quantity"] * $row["product_price"]);  
+                          $total = $total + ($row["quantity"] * $row["price"]);  
                      }  
                      echo '  
                      <h3 align="center">Order Summary for Order No.'.$_SESSION["order_id"].'</h3>  

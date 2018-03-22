@@ -159,7 +159,7 @@ if($_POST["action"] == "remove")
                 <tr>  
                      <td colspan="5" align="center">  
                           <form method="post" action="cart.php">  
-                               <input type="submit" name="place_order" class="btn btn-warning" value="Place Order" />  
+                               <input type="submit" name="place_order" class="btn btn-warning" value="Place Order" />  <input type="hidden" name="total" value="'.$total.'" />
                           </form>  
                      </td>  
                 </tr>  
