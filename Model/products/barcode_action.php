@@ -26,21 +26,26 @@ if(isset($_POST['btn_action']))
 				':barcode'	=>	$_POST["barcode"]
 			)
 		);
-		$result = $statement->fetchAll();
-		foreach($result as $row)
-		{
-			$output['category_id'] = $row['category_id'];
-			$output['brand_id'] = $row['brand_id'];
-			$output["brand_select_box"] = fill_brand_list($connect, $row["category_id"]);
-			$output['position'] = $row['position'];
-			$output['id_main'] = $row['id_main'];
-			$output['product_name'] = $row['product_name'];
-			$output['product_description'] = $row['product_description'];
-			$output['product_quantity'] = $row['product_quantity'];
-			$output['product_unit'] = $row['product_unit'];
+		$count = $statement->rowCount();
+		if($count > 0){
+			$result = $statement->fetchAll();
+			foreach($result as $row) {
+				$output['product_id'] = $row['product_id'];
+				$output['category_id'] = $row['category_id'];
+				$output['brand_id'] = $row['brand_id'];
+				$output["brand_select_box"] = fill_brand_list($connect, $row["category_id"]);
+				$output['position'] = $row['position'];
+				$output['id_main'] = $row['id_main'];
+				$output['product_name'] = $row['product_name'];
+				$output['product_description'] = $row['product_description'];
+				$output['product_quantity'] = $row['product_quantity'];
+				$output['product_unit'] = $row['product_unit'];
 
-			$output['product_base_price'] = $row['product_base_price'];
-			$output['product_tax'] = $row['product_tax'];
+				$output['product_base_price'] = $row['product_base_price'];
+				$output['product_tax'] = $row['product_tax'];
+			}
+		} else {
+			$output['product_id'] = 0;
 		}
 		echo json_encode($output);
 	}
@@ -63,15 +68,18 @@ if(isset($_POST['btn_action']))
 	if($_POST['btn_action'] == 'Add')
 	{
 		$query = "
-		INSERT INTO product (category_id, brand_id, product_name, product_description, product_quantity, product_unit, product_base_price, product_tax, product_enter_by, product_status, product_date) 
-		VALUES (:category_id, :brand_id, :product_name, :product_description, :product_quantity, :product_unit, :product_base_price, :product_tax, :product_enter_by, :product_status, :product_date)
+		INSERT INTO product (barcode, category_id, brand_id, product_name, position, id_main, product_description, product_quantity, product_unit, product_base_price, product_tax, product_enter_by, product_status, product_date) 
+		VALUES (:barcode, :category_id, :brand_id, :product_name, :position, :id_main, :product_description, :product_quantity, :product_unit, :product_base_price, :product_tax, :product_enter_by, :product_status, :product_date)
 		";
 		$statement = $connect->prepare($query);
 		$statement->execute(
 			array(
+				':barcode'				=>	$_POST['barcode'],
 				':category_id'			=>	$_POST['category_id'],
 				':brand_id'				=>	$_POST['brand_id'],
 				':product_name'			=>	$_POST['product_name'],
+				':position'				=>	$_POST['position'],
+				':id_main'				=>	$_POST['id_main'],
 				':product_description'	=>	$_POST['product_description'],
 				':product_quantity'		=>	$_POST['product_quantity'],
 				':product_unit'			=>	$_POST['product_unit'],
@@ -193,6 +201,9 @@ if(isset($_POST['btn_action']))
 		$query = "
 		UPDATE product 
 		set category_id = :category_id, 
+		barcode = :barcode,
+		position = :position,
+		id_main = :id_main,
 		brand_id = :brand_id,
 		product_name = :product_name,
 		product_description = :product_description, 
@@ -205,6 +216,9 @@ if(isset($_POST['btn_action']))
 		$statement = $connect->prepare($query);
 		$statement->execute(
 			array(
+				':barcode'			=>	$_POST['barcode'],
+				':position'			=>	$_POST['position'],
+				':id_main'			=>	$_POST['id_main'],
 				':category_id'			=>	$_POST['category_id'],
 				':brand_id'				=>	$_POST['brand_id'],
 				':product_name'			=>	$_POST['product_name'],
@@ -222,6 +236,8 @@ if(isset($_POST['btn_action']))
 			echo 'Product Details Edited';
 		}
 	}
+	
+	
 	if($_POST['btn_action'] == 'delete')
 	{
 		$status = 'active';

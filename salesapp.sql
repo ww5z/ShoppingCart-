@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 22 مارس 2018 الساعة 12:13
+-- Generation Time: 05 أبريل 2018 الساعة 12:20
 -- إصدار الخادم: 10.1.28-MariaDB
 -- PHP Version: 7.1.10
 
@@ -559,7 +559,8 @@ INSERT INTO `product` (`product_id`, `category_id`, `brand_id`, `barcode`, `posi
 (381, 0, 0, '19', 0, 0, '1919', '', 0, '', 19.00, '0.00', 0.00, 0, 'active', '2015-02-07', '0.00', 0, ''),
 (382, 0, 0, '17', 2, 383, 'منتج بسبعة عشر ريال', '', 0, '', 17.00, '0.00', 0.00, 0, 'active', '2015-02-08', '0.00', 0, ''),
 (383, 5, 1, '55', 1, 0, 'حليب قليل الدسم 180م', 'حليب قليل الدسم ', 5, 'Bottles', 15.00, '0.05', 0.00, 1, 'active', '2018-02-13', '0.00', 0, ''),
-(384, 5, 3, '44', 0, 0, 'حليب نيدو حجم 200مل ج', 'حليب نيدو حجم 200مل ج', 1, 'Bags', 200.00, '0.05', 0.00, 1, 'active', '2018-02-14', '0.00', 0, '');
+(384, 5, 3, '44', 0, 0, 'حليب نيدو حجم 200مل ج', 'حليب نيدو حجم 200مل ج', 1, 'Bags', 200.00, '0.05', 0.00, 1, 'active', '2018-02-14', '0.00', 0, ''),
+(385, 1, 2, '66', 1, 0, '000', '666666666666666 6666 0000', 50, 'Bottles', 66.00, '0.05', 0.00, 1, 'active', '2018-04-05', '0.00', 0, '');
 
 -- --------------------------------------------------------
 
@@ -742,7 +743,7 @@ ALTER TABLE `inventory_order_product`
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=385;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=386;
 
 --
 -- AUTO_INCREMENT for table `taxes`

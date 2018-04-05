@@ -118,13 +118,14 @@ include('header.php');
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         </div>
                     </div>
-                </form>
+             
             </div>
         </div>
-
+</form>
+<!--
         <div id="productdetailsModal" class="modal fade">
             <div class="modal-dialog">
-                <form method="post" id="product_form">
+                
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -141,6 +142,7 @@ include('header.php');
                 </form>
             </div>
         </div>
+-->
 
 <script>
 $(document).ready(function(){
@@ -158,30 +160,59 @@ $(document).ready(function(){
             dataType:"json",
 			
             success:function(data){
-				
-                //$('#productModal').modal('show');
-                $('#category_id').val(data.category_id);
-                $('#brand_id').html(data.brand_select_box);
-                $('#brand_id').val(data.brand_id);
-				$('#position').val(data.position);
-				$('#id_main').val(data.id_main);
-                $('#product_name').val(data.product_name);
-                $('#product_description').val(data.product_description);
-                $('#product_quantity').val(data.product_quantity);
-                $('#product_unit').val(data.product_unit);
-                $('#product_base_price').val(data.product_base_price);
-                $('#product_tax').val(data.product_tax);
-                $('.modal-title').html("<i class='fa fa-pencil-square-o'></i> Edit Product");
-                $('#product_id').val(product_id);
-                $('#action').val("Edit");
-                $('#btn_action').val("Edit");
+				if (data.product_id > 0) {
+					
+					//$('#productModal').modal('show');
+					$('#category_id').val(data.category_id);
+					$('#brand_id').html(data.brand_select_box);
+					$('#brand_id').val(data.brand_id);
+					$('#position').val(data.position);
+					$('#id_main').val(data.id_main);
+					$('#product_name').val(data.product_name);
+					$('#product_description').val(data.product_description);
+					$('#product_quantity').val(data.product_quantity);
+					$('#product_unit').val(data.product_unit);
+					$('#product_base_price').val(data.product_base_price);
+					$('#product_tax').val(data.product_tax);
+					$('.modal-title').html("<i class='fa fa-pencil-square-o'></i> Edit Product").addClass("bg-primary");
+					$('#product_id').val(data.product_id );
+					$('#action').val("Edit");
+					$('#btn_action').val("Edit");
+					
+				} else {
+					$("#product_form")[0].reset();
+					$('#barcode').val(barcode);
+					$('.modal-title').html("<i class='fa fa-plus'></i> Add Product").removeClass( "bg-primary" );
+					$('#action').val("Add");
+        			$('#btn_action').val("Add");
+				}
+                
             }
         })
     });
 	
 	
-	
-	
+	// ################ حفظ بيانات ################
+    $('#action').click(function(){
+        //event.preventDefault();
+		var form_data = $('#product_form').serialize();
+        $('#action').attr('disabled', 'disabled');
+        //var form_data = $(this).serialize();
+		//alert("اكمال بناء نموذج الحفظ والتعديل")
+        $.ajax({
+            url:"Model/products/barcode_action.php",
+            method:"POST",
+            data:form_data,
+            success:function(data)
+            {
+                $('#product_form')[0].reset();
+                //$('#productModal').modal('hide');
+                $('#alert_action').fadeIn().html('<div class="alert alert-success">'+data+'</div>');
+                $('#action').attr('disabled', false);
+                productdataTable.ajax.reload();
+            }
+        })
+    });	
 	
 	
 	
